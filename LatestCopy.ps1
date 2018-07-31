@@ -1,12 +1,13 @@
 ### LatestCopy
 ### Platform: Windows Powershell v5+
-### Public Release: v2.0.0
+### Public Release: v2.0.1
 ### Date: 25/07/2018
 ### Description: v2.0.0 of LatestCopy allows the user to create a .zip archive of a Crestron based project, capturing a number of the critical file types for publishing or backing up.
 # The Default Search Directory is $env:USERPROFILE\Crestron\ (or C:\Users\USERNAME\Crestron) and can be changed when prompted.
 # The Default Destination for a copy is $env:USERPROFILE\Crestron\Temp-PackageProject (or C:\Users\USERNAME\Crestron\Temp-PackageProject) and can be changed when prompted.
 # The resulting .zip archive will have the name of the destination folder (e.g. Temp-PackageProject.zip).
 # If the file Temp-PackageProject.zip already exists you will be required to move or delete this before continuing (A prompt for deletion and archiving will be given).
+# v2.0.1 Added *.c3prj folder
 
 ### Roadmap (ToDo) ###
 # v2.1.0 Add switch statement for build package or archive package
@@ -60,6 +61,11 @@ $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*.vtz" -rec
             #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
         $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$vtpDestinationDirectory\" -Type container -Force) -Force
+
+        # Capture latest directory of name "*.c3prj" and copy to specified destination
+        $files = Get-ChildItem $consolePromptSearchDirectory -filter "*.c3prj" -rec
+            #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
+        $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$vtpDestinationDirectory\" -Type container -Force) -Recurse -Force
 
 #ToDo
 
@@ -118,4 +124,3 @@ fZipReplace $folderName $consolePromptPackageDirectory
 #write-host "Debug: Clean Up Start"
 Remove-Item "$consolePromptPackageDirectory" -Recurse | write-output
 #Write-Host "Debug: Clean Up Finish, Temporary Directory $consolePromptPackageDirectory has been deleted"
-
