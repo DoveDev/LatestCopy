@@ -1,13 +1,14 @@
 ### LatestCopy
 ### Platform: Windows Powershell v5+
-### Public Release: v2.0.1
-### Date: 25/07/2018
+### Public Release: v2.0.2
+### Date: 31/07/2018
 ### Description: v2.0.0 of LatestCopy allows the user to create a .zip archive of a Crestron based project, capturing a number of the critical file types for publishing or backing up.
 # The Default Search Directory is $env:USERPROFILE\Crestron\ (or C:\Users\USERNAME\Crestron) and can be changed when prompted.
 # The Default Destination for a copy is $env:USERPROFILE\Crestron\Temp-PackageProject (or C:\Users\USERNAME\Crestron\Temp-PackageProject) and can be changed when prompted.
 # The resulting .zip archive will have the name of the destination folder (e.g. Temp-PackageProject.zip).
 # If the file Temp-PackageProject.zip already exists you will be required to move or delete this before continuing (A prompt for deletion and archiving will be given).
 # v2.0.1 Added *.c3prj folder
+# v2.0.2 Added Dropbox Process Start and Stop
 
 ### Roadmap (ToDo) ###
 # v2.1.0 Add switch statement for build package or archive package
@@ -29,14 +30,16 @@ $consolePromptPackageDirectory = Read-Host "Please enter the directory where you
    
 $smwDestinationDirectory = "$consolePromptPackageDirectory\smw\" #Destination of program files
 $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of touch panel files
-
+        #Stop the Current Dropbox process
+        Get-Process -Name "Dropbox" | Stop-Process -ErrorAction Continue
+        
         New-Item "$defaultPackageDirectory" -Type container -Force
 
         # Capture latest file of type "*_compiled.zip" and copy to specified destination 
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_complied.zip" -rec
-            $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
+            #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
         $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$smwDestinationDirectory\" -Type container -Force) -Force
-
+   
         # Capture latest file of type "*_archive.zip" and copy to specified destination
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_archive.zip" -rec
             #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
@@ -124,3 +127,6 @@ fZipReplace $folderName $consolePromptPackageDirectory
 #write-host "Debug: Clean Up Start"
 Remove-Item "$consolePromptPackageDirectory" -Recurse | write-output
 #Write-Host "Debug: Clean Up Finish, Temporary Directory $consolePromptPackageDirectory has been deleted"
+
+#Relaunch Dropbox
+Start-Process "C:\Program Files (x86)\Dropbox\Client\Dropbox.exe"
