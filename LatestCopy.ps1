@@ -9,6 +9,7 @@
 # If the file Temp-PackageProject.zip already exists you will be required to move or delete this before continuing (A prompt for deletion and archiving will be given).
 # v2.0.1 Added *.c3prj folder
 # v2.0.2 Added Dropbox Process Start and Stop
+# v2.0.3 Added *.spz file type and corrected compiled typo.
 
 ### Roadmap (ToDo) ###
 # v2.1.0 Add switch statement for build package or archive package
@@ -36,7 +37,7 @@ $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of
         New-Item "$defaultPackageDirectory" -Type container -Force
 
         # Capture latest file of type "*_compiled.zip" and copy to specified destination 
-        $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_complied.zip" -rec
+        $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_compiled.zip" -rec
             #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
         $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$smwDestinationDirectory\" -Type container -Force) -Force
    
@@ -47,6 +48,11 @@ $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of
         
         # Capture latest file of type "*.lpz" and copy to specified destination
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*.lpz" -rec
+            #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
+        $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$smwDestinationDirectory\" -Type container -Force) -Force
+
+        # Capture latest file of type "*.spz" and copy to specified destination
+        $files = Get-ChildItem $consolePromptSearchDirectory -filter "*.spz" -rec
             #$files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} # Outputs file information to console
         $files | Group-Object directory | ForEach-Object {@($_.group | Sort-Object {[datetime]$_.LastWriteTime} -desc)[0]} | Copy-Item -Destination (New-Item "$smwDestinationDirectory\" -Type container -Force) -Force
         
