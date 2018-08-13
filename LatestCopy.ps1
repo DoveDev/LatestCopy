@@ -34,7 +34,6 @@ $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of
         #Stop the Current Dropbox process
         Get-Process -Name "Dropbox" | Stop-Process -ErrorAction Continue
         
-        New-Item "$defaultPackageDirectory" -Type container -Force
 
         # Capture latest file of type "*_compiled.zip" and copy to specified destination 
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_compiled.zip" -rec
@@ -114,7 +113,7 @@ function fZipReplace {
                  }#write-host "Debug: Exit Try"
                  
                  #write-host "Debug: fZipReplace: Packaging"
-                 Get-ChildItem $pConsolePromptPackageDirectory | Compress-Archive -DestinationPath $pConsolePromptPackageDirectory -Update
+                 Get-ChildItem $pConsolePromptPackageDirectory | Compress-Archive -DestinationPath "$pConsolePromptPackageDirectory.zip" -Update
                  $message = "$($pFolderName).zip has been deleted and replaced with a new archive."
                  
              }
