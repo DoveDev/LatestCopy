@@ -10,6 +10,7 @@
 # v2.0.1 Added *.c3prj folder
 # v2.0.2 Added Dropbox Process Start and Stop
 # v2.0.3 Added *.spz file type and corrected compiled typo.
+# v2.0.4 Updated archive deletion question to include file path and fixed filetype bug in archive creation.
 
 ### Roadmap (ToDo) ###
 # v2.1.0 Add switch statement for build package or archive package
