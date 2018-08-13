@@ -90,7 +90,7 @@ function fZipReplace {
      $yes = New-Object System.Management.Automation.Host.ChoiceDescription '&Yes', 'Deletes file'
      $no = New-Object System.Management.Automation.Host.ChoiceDescription '&No', 'Does not delete file'
      $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
-     $result = $host.ui.PromptForChoice('WARNING!', 'Would you like to delete the file?', $options, 0)
+     $result = $host.ui.PromptForChoice('WARNING!', "Would you like to delete the file, $pConsolePromptPackageDirectory.zip?", $options, 0)
  
      switch ($result)
          {
