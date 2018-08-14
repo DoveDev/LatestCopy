@@ -1,22 +1,20 @@
-### LatestCopy
-### Platform: Windows Powershell v5+
-### Current Release: v2.0.3
-### Date: 31/07/2018
-### Description: v2.0.0 of LatestCopy allows the user to create a .zip archive of a Crestron based project, capturing a number of the critical file types for publishing or backing up.
-# The Default Search Directory is $env:USERPROFILE\Crestron\ (or C:\Users\USERNAME\Crestron) and can be changed when prompted.
-# The Default Destination for a copy is $env:USERPROFILE\Crestron\Temp-PackageProject (or C:\Users\USERNAME\Crestron\Temp-PackageProject) and can be changed when prompted.
-# The resulting .zip archive will have the name of the destination folder (e.g. Temp-PackageProject.zip).
-# If the file Temp-PackageProject.zip already exists you will be required to move or delete this before continuing (A prompt for deletion and archiving will be given).
-# v2.0.1 Added *.c3prj folder
-# v2.0.2 Added Dropbox Process Start and Stop
-# v2.0.3 Added *.spz file type and corrected compiled typo.
-# v2.0.4 Updated archive deletion question to include file path and fixed filetype bug in archive creation.
+#. # LatestCopy
+#. ## Platform: Windows Powershell v5+
+#. Description: v2.0.0 of LatestCopy allows the user to create a .zip archive of a Crestron based project, capturing a number of the critical file types for publishing or backing up.
+#. The Default Search Directory is $env:USERPROFILE\Crestron\ (or C:\Users\USERNAME\Crestron) and can be changed when prompted.
+#. The Default Destination for a copy is $env:USERPROFILE\Crestron\Temp-PackageProject (or C:\Users\USERNAME\Crestron\Temp-PackageProject) and can be changed when prompted.
+#. The resulting .zip archive will have the name of the destination folder (e.g. Temp-PackageProject.zip).
+#. If the file Temp-PackageProject.zip already exists you will be required to move or delete this before continuing (A prompt for deletion and archiving will be given).
+#. v2.0.1 Added *.c3prj folder
+#. v2.0.2 Added Dropbox Process Start and Stop
+#. v2.0.3 Added *.spz file type and corrected compiled typo.
+#. v2.0.4 Updated archive deletion question to include file path and fixed filetype bug in archive creation.
 
-### Roadmap (ToDo) ###
-# v2.1.0 Add switch statement for build package or archive package
-# v2.2.0 Add option for clean and restore (as in create back up copy, then delete contents of vtp/smw folder then restore back up.)
-# v3.0.0+ Add and Refactor for alternate file types and/or project senarios.
-###
+#.## Roadmap (ToDo) ###
+#. v2.1.0 Add switch statement for build package or archive package
+#. v2.2.0 Add option for clean and restore (as in create back up copy, then delete contents of vtp/smw folder then restore back up.)
+#. v3.0.0+ Add and Refactor for alternate file types and/or project senarios.
+#.##
 
 
 
@@ -29,12 +27,17 @@ $defaultPackageDirectory = "$env:USERPROFILE\Crestron\Temp-PackageProject"
 
 $consolePromptPackageDirectory = Read-Host "Please enter the directory where you wish to copy the project files to and press enter. [$($defaultPackageDirectory)]"
     $consolePromptPackageDirectory = $($defaultPackageDirectory,$consolePromptPackageDirectory)[[bool]$consolePromptPackageDirectory]
-   
+
+if ($consolePromptPackageDirectory -eq $consolePromptSearchDirectory){
+    $consolePromptPackageDirectory = "$consolePromptPackageDirectory-Extract"
+}
+
 $smwDestinationDirectory = "$consolePromptPackageDirectory\smw\" #Destination of program files
 $vtpDestinationDirectory = "$consolePromptPackageDirectory\vtp\" #Destination of touch panel files
         #Stop the Current Dropbox process
         Get-Process -Name "Dropbox" | Stop-Process -ErrorAction Continue
         
+        New-Item "$consolePromptPackageDirectory\" -Type container -Force
 
         # Capture latest file of type "*_compiled.zip" and copy to specified destination 
         $files = Get-ChildItem $consolePromptSearchDirectory -filter "*_compiled.zip" -rec
